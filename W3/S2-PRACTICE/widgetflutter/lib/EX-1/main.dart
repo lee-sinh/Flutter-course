@@ -22,7 +22,8 @@ class MyFirstScaffold extends StatelessWidget {
         style: TextStyle(
           color: Colors.orange,
           fontSize: 50
-        ),)),
+        ),)
+        ),
     );
   }
 }
