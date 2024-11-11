@@ -10,27 +10,54 @@ List<String> images = [
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false, // Why this line ? Can you explain it ?
+      //this line of code remove the Debug banner in the top right of the page when we debug
       home: Scaffold(
         backgroundColor: Colors.green[50],
-        appBar: AppBar(
-          backgroundColor: Colors.green[400],
-          title: const Text('Image viewer'),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.navigate_before),
-              tooltip: 'Go to the previous image',
-              onPressed: () => {},
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 50, 0),
-              child: IconButton(
-                icon: const Icon(Icons.navigate_next),
-                tooltip: 'Go to the next image',
-                onPressed: () => {},
-              ),
-            ),
-          ],
-        ),
-        body: Image.asset(images[0]),
+        
+        body: Picture(),
       ),
     ));
+class Picture extends StatefulWidget{
+  const Picture({super.key});
+
+  @override
+  State<Picture> createState() => _PictureState();
+}
+class _PictureState extends State<Picture>{
+
+   int index=0;
+  void nextButton(){
+    setState(() {
+      index=(index+1)%images.length;
+    }); 
+  }
+  void backButton(){
+    setState(() {
+      index = (index - 1 + images.length) % images.length;
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green[400],
+        title: const Text('Image viewer'),
+        actions: [
+          IconButton(
+            onPressed: backButton,
+            tooltip: "Go to the previous page",
+            icon: const Icon(Icons.navigate_before),
+          ),
+          IconButton(
+            onPressed: nextButton,
+            tooltip: "Go to the next page",
+            icon: const Icon(Icons.navigate_next),
+          ),
+        ],
+      ),
+      body: Center(
+        child: Image.asset(images[index]),
+      ),
+    );
+  }
+}
