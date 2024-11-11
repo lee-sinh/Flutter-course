@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 List<String> images = [
-  "assets/w4-s2/bird.jpg",
-  "assets/w4-s2/bird2.jpg",
-  "assets/w4-s2/insect.jpg",
-  "assets/w4-s2/girl.jpg",
-  "assets/w4-s2/man.jpg",
+  "assets/images/w4-s2/bird.jpg",
+  "assets/images/w4-s2/bird2.jpg",
+  "assets/images/w4-s2/insect.jpg",
+  "assets/images/w4-s2/girl.jpg",
+  "assets/images/w4-s2/man.jpg",
 ];
 
 void main() => runApp(MaterialApp(
