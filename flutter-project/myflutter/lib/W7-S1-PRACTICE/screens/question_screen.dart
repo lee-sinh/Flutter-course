@@ -1,11 +1,50 @@
 import 'package:flutter/material.dart';
- 
+import 'package:myflutter/W7-S1-PRACTICE/model/quiz.dart';
+
+
+
+
 class QuestionScreen extends StatelessWidget {
-  const QuestionScreen({super.key});
-  
+  const QuestionScreen(
+      {super.key, required this.question, required this.onTap});
+  final Question question;
+  final Function(String) onTap;
+
   @override
   Widget build(BuildContext context) {
-    return const Text("Question Screen");
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          question.title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 45,
+          ),
+        ),
+        for (int i = 0; i < question.possibleAnswers.length; i++)
+          TextButton(
+            onPressed: () => onTap(question.possibleAnswers[i]),
+            child: Container(
+              width: 300,
+              margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.blue[100],
+              ),
+              child: Center(
+                child: Text(
+                  question.possibleAnswers[i],
+                  style:const TextStyle(
+                    fontSize:30,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
   }
 }
  
