@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:myflutter/W8-S1/models/expense.dart';
 import 'package:myflutter/W8-S1/screens/expenses_list.dart';
 
-class Expenses extends StatefulWidget {
-  const Expenses({super.key});
+
+class ExpensesScreen extends StatefulWidget {
+  const ExpensesScreen({super.key});
 
   @override
-  State<Expenses> createState() => _ExpensesState();
+  State<ExpensesScreen> createState() => _ExpensesScreenState();
 }
 
-class _ExpensesState extends State<Expenses> {
+class _ExpensesScreenState extends State<ExpensesScreen> {
   List<Expense> _registeredExpenses = [
     Expense(
       title: 'book', 
@@ -33,16 +34,16 @@ class _ExpensesState extends State<Expenses> {
         title: const Text('Expense App'),
         backgroundColor: Colors.blue,
       ),
-      // body: ExpensesList(expenses: _registeredExpenses),
-      body: 
-        Center(
-          child: Container(
-            margin: const EdgeInsets.all(10.0),
-            color: Colors.white,
-            width: 60.0,
-            height: 20.0,
-              ),
-        )
+      body: ExpensesList(expenses: _registeredExpenses),
+      // body: 
+      //   Center(
+      //     child: Container(
+      //       margin: const EdgeInsets.all(10.0),
+      //       color: Colors.white,
+      //       width: 60.0,
+      //       height: 20.0,
+      //         ),
+      //   )
 
     );
   }
