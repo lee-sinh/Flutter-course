@@ -17,6 +17,12 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   String get title => _titleController.text;
 
+  // Dropdown-related state
+  Category? _selectedCategory;
+
+  // Date picker-related state
+  DateTime? _selectedDate;
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -25,7 +31,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
   }
 
   void onCancel() {
-    
     // Close modal
     Navigator.pop(context);
   }
@@ -35,18 +40,50 @@ class _ExpenseFormState extends State<ExpenseForm> {
     String title = _titleController.text;
     double amount = double.parse(_valueController.text);
 
+    if (_selectedCategory == null) {
+      // Show an error message if category is not selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a category')),
+      );
+      return;
+    }
+
+    if (_selectedDate == null) {
+      // Show an error message if date is not selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a date')),
+      );
+      return;
+    }
+
     // 2- Create the expense
     Expense expense = Expense(
-        title: title,
-        amount: amount,
-        date: DateTime.now(),     //  TODO :  For now it s a fake data
-        category: Category.food); //  TODO :  For now it s a fake data
+      title: title,
+      amount: amount,
+      date: _selectedDate!,
+      category: _selectedCategory!,
+    );
 
     // 3- Ask the parent to add the expense
     widget.onCreated(expense);
 
     // 4- Close modal
     Navigator.pop(context);
+  }
+
+  Future<void> _selectDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    }
   }
 
   @override
@@ -75,16 +112,49 @@ class _ExpenseFormState extends State<ExpenseForm> {
               label: Text('Amount'),
             ),
           ),
+          DropdownButton<Category>(
+            value: _selectedCategory,
+            hint: const Text('Select a category'),
+            items: Category.values.map((Category category) {
+              return DropdownMenuItem<Category>(
+                value: category,
+                child: Text(
+                  category.name.toUpperCase(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              );
+            }).toList(),
+            onChanged: (Category? newValue) {
+              setState(() {
+                _selectedCategory = newValue;
+              });
+            },
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  _selectedDate == null
+                      ? 'No date selected'
+                      : 'Selected Date: ${_selectedDate!.toLocal()}'.split(' ')[0],
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.calendar_today),
+                onPressed: _selectDate,
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(onPressed: onCancel, child: const Text('Cancel')),
-              const SizedBox(
-                width: 20,
-              ),
-              ElevatedButton(onPressed: onAdd, child: const Text('Create')),
+              const SizedBox(width: 20),
+              ElevatedButton(onPressed: onAdd, child: const Text('Save Expense')),
             ],
-          )
+          ),
         ],
       ),
     );
