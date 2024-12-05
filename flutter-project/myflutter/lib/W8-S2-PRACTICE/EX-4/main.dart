@@ -16,7 +16,7 @@ void main() {
               end: Alignment.bottomRight,
             ),
           ),
-          child: const DeviceConverter(),
+          child: const Converter(),
         ),
       ),
     ));

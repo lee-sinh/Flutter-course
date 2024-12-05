@@ -1,74 +1,138 @@
 import 'package:flutter/material.dart';
- 
-class DeviceConverter extends StatefulWidget {
-  const DeviceConverter({super.key});
+import 'package:flutter/services.dart';
+
+enum Device{
+  euro, riels, dong
+}
+class Converter extends StatefulWidget {
+  const Converter({super.key});
 
   @override
-  State<DeviceConverter> createState() => _DeviceConverterState();
+  State<Converter> createState() => _ConverterState();
 }
 
-class _DeviceConverterState extends State<DeviceConverter> {
- 
-  final BoxDecoration textDecoration = BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(12),
-  );
- 
+class _ConverterState extends State<Converter> {
+  final _amountDollar = TextEditingController();
+  String _convertedAmount = '';
+  Device? _selectedDevice = Device.euro;
 
-  @override
-  void initState() {
-    super.initState();
+  final Map<Device, double> _conversionRates = {
+    Device.euro: 0.95,    
+    Device.riels: 4100,  
+    Device.dong: 25400,  
+  };
+
+  void _convertAmount() {
+    // Get the entered amount in dollars
+    final enteredAmount = double.tryParse(_amountDollar.text) ?? 0.0;
+
+    // Get the conversion rate for the selected device
+    final rate = _conversionRates[_selectedDevice] ?? 1.0;
+
+    final converted = enteredAmount * rate;
+
+    // Update the converted amount string
+    setState(() {
+      _convertedAmount = converted.toStringAsFixed(2);
+    });
   }
- 
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(40.0),
-      child: Center(
+    return Scaffold(
+      backgroundColor: Colors.orange[800],
+      body: Padding(
+        padding: const EdgeInsets.all(30),
+        child: Center(
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Icon(
-            Icons.money,
-            size: 60,
-            color: Colors.white,
-          ),
-          const Center(
-            child: Text(
-              "Converter",
-              style: TextStyle(color: Colors.white, fontSize: 30),
-            ),
-          ),
-          const SizedBox(height: 50),
-          const Text("Amount in dollars:"),
-          const SizedBox(height: 10),
-
-          TextField(
-              decoration: InputDecoration(
-                  prefix: const Text('\$ '),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: Colors.white, width: 1.0),
-                    borderRadius: BorderRadius.circular(12),
+            children: [
+              const Text(
+                'Converter', 
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 64),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text('Amount in dollars:'),
+                  const SizedBox(height: 12,), 
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    controller: _amountDollar,
+                    decoration: InputDecoration(
+                      prefix: const Text('\$ '),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.white), // Always visible when enabled
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.white), // Visible when focused
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      _convertAmount();
+                    },
                   ),
-                  hintText: 'Enter an amount in dollar',
-                  hintStyle: const TextStyle(color: Colors.white)),
-              style: const TextStyle(color: Colors.white)),
+                  const SizedBox(height: 36),
+                  const Text('Device:'),
+                  DropdownButton<Device>( 
+                    value: _selectedDevice, 
+                    items: Device.values.map((device) =>
+                      DropdownMenuItem<Device>(
+                        child: Text(device.name.toUpperCase()),
+                        value: device,
+                      ),
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedDevice = value;
+                      });
+                      _convertAmount();
+                    }
+                  ),
+                  const SizedBox(height: 36),
+                  const Text('Amount in selected device:'),
+                  const SizedBox(height: 12,), 
+                  TextField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.white), 
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.white), 
+                      ),
+                      border: InputBorder.none,
+                      hintText: _convertedAmount,
+                    ),
+                  ),
 
-          const SizedBox(height: 30),
-          const Text("Device: (TODO !)"),
-       
-
-          const SizedBox(height: 30),
-          const Text("Amount in selected device:"),
-          const SizedBox(height: 10),
-          Container(
-              padding: const EdgeInsets.all(10),
-              decoration: textDecoration,
-              child: const Text('TODO !'))
-        ],
-      )),
+                ]
+              ),
+            ],
+          ),
+        ),
+      )
     );
   }
 }
+
+
+
+
+
+
+
+
