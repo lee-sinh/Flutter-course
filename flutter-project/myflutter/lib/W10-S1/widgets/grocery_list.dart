@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/dummy_items.dart';
 import '../models/grocery_item.dart';
+import 'new_item.dart';
  
 class GroceryList extends StatefulWidget {
   const GroceryList({super.key});
@@ -10,6 +11,18 @@ class GroceryList extends StatefulWidget {
 }
 
 class _GroceryListState extends State<GroceryList> {
+
+  
+  void _addItem()  {
+ 
+     Navigator.of(context).push<GroceryItem>(
+      MaterialPageRoute(
+        builder: (ctx) => const NewItem(),
+      ),
+    );
+    
+  }
+
  
   @override
   Widget build(BuildContext context) {
@@ -27,7 +40,7 @@ class _GroceryListState extends State<GroceryList> {
         title: const Text('Your Groceries'),
         actions: [
           IconButton(
-            onPressed: () => {},
+            onPressed:  _addItem,
             icon: const Icon(Icons.add),
           ),
         ],

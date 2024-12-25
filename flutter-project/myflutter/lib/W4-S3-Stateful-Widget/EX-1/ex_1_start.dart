@@ -50,7 +50,7 @@ class _MutableButtonState extends State<MutableButton> {
           child: Center(
             child: Text(
               buttonText,
-              
+            
               style: TextStyle(
                 fontSize: 30,
                 color: textColor,
